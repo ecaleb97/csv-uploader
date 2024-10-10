@@ -10,7 +10,7 @@ export function useUploadFile() {
 			// 	form: { file },
 			// });
 			const response = await fetch(
-				process.env.NEXT_PUBLIC_APP_URL + "/api/upload",
+				`${process.env.NEXT_PUBLIC_APP_URL!}/api/upload`,
 				{
 					method: "POST",
 					body: formData,
