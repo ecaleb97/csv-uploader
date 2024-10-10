@@ -5,7 +5,6 @@ import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Data } from "@/types/types";
-import { toast } from "sonner";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useSearchData } from "@/features/users/api/use-search-data";
 import { Search } from "lucide-react";
