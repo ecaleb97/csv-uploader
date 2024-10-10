@@ -32,7 +32,6 @@ export function UploadForm() {
 		mutate(file, {
 			onSuccess: (data) => {
 				if (data) {
-					console.log("RESPONSE DATA", data);
 					setData(data.data);
 				}
 				setStatus(APP_STATUS.READY_USAGE);
