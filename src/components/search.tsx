@@ -9,6 +9,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { useSearchData } from "@/features/users/api/use-search-data";
 import { Search } from "lucide-react";
 import { TableData } from "./table-wrapper";
+import { useQueryState } from "nuqs";
 
 type Inputs = {
 	search: string;
@@ -16,26 +17,35 @@ type Inputs = {
 
 export function SearchUsers({ initialData }: { initialData: Data }) {
 	const [data, setData] = useState<Data>(initialData);
-	const [search, setSearch] = useState<string>("");
+	// const [search, setSearch] = useState<string>("");
+	const [searchQuery, setSearchQuery] = useQueryState("q", { history: "push" });
 	const form = useForm<Inputs>({
 		defaultValues: {
 			search: "",
 		},
 	});
-	const debouncedSearch = useDebounce(search, 500);
-	const { data: usersData, isLoading } = useSearchData(debouncedSearch);
+	// const debouncedSearch = useDebounce(search, 500);
+	const deboundedSearchQuery = useDebounce(searchQuery, 500);
+	// const { data: usersData, isLoading } = useSearchData(debouncedSearch);
+	const { data: usersData, isLoading } = useSearchData(
+		deboundedSearchQuery ? deboundedSearchQuery : "",
+	);
+
+	// useEffect(() => {
+	// 	const newPathname =
+	// 		debouncedSearch === ""
+	// 			? window.location.pathname
+	// 			: `?q=${debouncedSearch}`;
+
+	// 	window.history.pushState({}, "", newPathname);
+	// }, [debouncedSearch]);
 
 	useEffect(() => {
-		const newPathname =
-			debouncedSearch === ""
-				? window.location.pathname
-				: `?q=${debouncedSearch}`;
-
-		window.history.pushState({}, "", newPathname);
-	}, [debouncedSearch]);
-
-	useEffect(() => {
-		if (!debouncedSearch) {
+		// if (!debouncedSearch) {
+		// 	setData(initialData);
+		// 	return;
+		// }
+		if (!deboundedSearchQuery) {
 			setData(initialData);
 			return;
 		}
@@ -43,7 +53,7 @@ export function SearchUsers({ initialData }: { initialData: Data }) {
 		if (usersData) {
 			setData(usersData);
 		}
-	}, [initialData, debouncedSearch, setData, usersData]);
+	}, [initialData, deboundedSearchQuery, setData, usersData]);
 
 	return (
 		<div className="my-4">
@@ -62,7 +72,8 @@ export function SearchUsers({ initialData }: { initialData: Data }) {
 											placeholder="Search CSV content..."
 											onChange={(e) => {
 												field.onChange(e.target.value);
-												setSearch(e.target.value);
+												// setSearch(e.target.value);
+												setSearchQuery(e.target.value);
 											}}
 											className="pl-8"
 										/>
